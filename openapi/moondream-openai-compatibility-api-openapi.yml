@@ -1,0 +1,149 @@
+openapi: 3.1.0
+info:
+  title: Moondream Cloud OpenAI Compatibility API
+  version: '1.0'
+  description: Moondream is a fast, efficient open vision language model (VLM). The Moondream Cloud API exposes the model's "Skills" — Query (visual question answering), Caption, Detect (object detection with bounding boxes), Point (object center coordinates), and Segment (SVG path masks) — plus an OpenAI-compatible chat endpoint. Endpoints, request bodies, and responses in this specification are modeled faithfully from the published Moondream documentation (https://docs.moondream.ai). This is an API Evangelist generated spec; Moondream does not publish an OpenAPI document.
+  contact:
+    name: Moondream (M87 Labs)
+    url: https://moondream.ai
+    email: sales@moondream.ai
+  license:
+    name: Business Source License 1.1
+    url: https://github.com/m87-labs/moondream/blob/main/LICENSE
+  x-apievangelist-generated: true
+  x-source-docs: https://docs.moondream.ai/api
+servers:
+- url: https://api.moondream.ai/v1
+  description: Moondream Cloud
+security:
+- MoondreamAuth: []
+tags:
+- name: OpenAI Compatibility
+  description: OpenAI-compatible chat completions endpoint.
+paths:
+  /chat/completions:
+    post:
+      tags:
+      - OpenAI Compatibility
+      operationId: createChatCompletion
+      summary: OpenAI-compatible chat completion
+      description: OpenAI-compatible chat endpoint supporting multi-turn conversations, image inputs, streaming, and reasoning. Point any OpenAI client at https://api.moondream.ai/v1 with a Moondream API key as the bearer token.
+      security:
+      - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatCompletionRequest'
+      responses:
+        '200':
+          description: Chat completion result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatCompletionResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+components:
+  schemas:
+    ChatCompletionRequest:
+      type: object
+      required:
+      - model
+      - messages
+      properties:
+        model:
+          $ref: '#/components/schemas/ModelId'
+        messages:
+          type: array
+          items:
+            type: object
+            properties:
+              role:
+                type: string
+                enum:
+                - system
+                - user
+                - assistant
+              content:
+                description: Text or an array of content parts (text and image_url) for multimodal input.
+        stream:
+          type: boolean
+          default: false
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+            type:
+              type: string
+    ChatCompletionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        object:
+          type: string
+          examples:
+          - chat.completion
+        model:
+          type: string
+        choices:
+          type: array
+          items:
+            type: object
+            properties:
+              index:
+                type: integer
+              message:
+                type: object
+                properties:
+                  role:
+                    type: string
+                  content:
+                    type: string
+              finish_reason:
+                type: string
+    ModelId:
+      type: string
+      description: Model selection. A base model ID or a saved finetune checkpoint in {base_model}/{finetune_id}@{step} form.
+      examples:
+      - moondream3.1-9B-A2B
+      - moondream3-preview
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Malformed request (missing model, image, or invalid parameters).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RateLimited:
+      description: Rate limit exceeded (2 req/sec base tier, 10 req/sec for funded accounts).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    MoondreamAuth:
+      type: apiKey
+      in: header
+      name: X-Moondream-Auth
+      description: Moondream API key issued from the Moondream Cloud Console (https://moondream.ai/c/cloud/api-keys).
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: For the OpenAI-compatible endpoint, pass the Moondream API key as an OAuth-style bearer token.

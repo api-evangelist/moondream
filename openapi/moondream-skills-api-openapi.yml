@@ -1,0 +1,338 @@
+openapi: 3.1.0
+info:
+  title: Moondream Cloud OpenAI Compatibility Skills API
+  version: '1.0'
+  description: Moondream is a fast, efficient open vision language model (VLM). The Moondream Cloud API exposes the model's "Skills" — Query (visual question answering), Caption, Detect (object detection with bounding boxes), Point (object center coordinates), and Segment (SVG path masks) — plus an OpenAI-compatible chat endpoint. Endpoints, request bodies, and responses in this specification are modeled faithfully from the published Moondream documentation (https://docs.moondream.ai). This is an API Evangelist generated spec; Moondream does not publish an OpenAPI document.
+  contact:
+    name: Moondream (M87 Labs)
+    url: https://moondream.ai
+    email: sales@moondream.ai
+  license:
+    name: Business Source License 1.1
+    url: https://github.com/m87-labs/moondream/blob/main/LICENSE
+  x-apievangelist-generated: true
+  x-source-docs: https://docs.moondream.ai/api
+servers:
+- url: https://api.moondream.ai/v1
+  description: Moondream Cloud
+security:
+- MoondreamAuth: []
+tags:
+- name: Skills
+  description: Moondream vision Skills — query, caption, detect, point, segment.
+paths:
+  /query:
+    post:
+      tags:
+      - Skills
+      operationId: query
+      summary: Visual question answering
+      description: Ask a natural-language question about an image and receive an answer. Supports streaming.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryRequest'
+      responses:
+        '200':
+          description: Answer to the question.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /caption:
+    post:
+      tags:
+      - Skills
+      operationId: caption
+      summary: Image captioning
+      description: Generate a natural-language description of an image. Supports streaming and a length hint.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaptionRequest'
+      responses:
+        '200':
+          description: Generated caption.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaptionResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /detect:
+    post:
+      tags:
+      - Skills
+      operationId: detect
+      summary: Object detection
+      description: Identify and locate objects in an image, returning normalized bounding boxes.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DetectRequest'
+      responses:
+        '200':
+          description: Detected objects with bounding boxes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DetectResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /point:
+    post:
+      tags:
+      - Skills
+      operationId: point
+      summary: Object pointing
+      description: Get precise normalized center coordinates for objects in an image.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DetectRequest'
+      responses:
+        '200':
+          description: Center points for the requested object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PointResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /segment:
+    post:
+      tags:
+      - Skills
+      operationId: segment
+      summary: Image segmentation
+      description: Generate an SVG path segmentation mask for an object in an image.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DetectRequest'
+      responses:
+        '200':
+          description: SVG path mask and bounding box for the object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SegmentResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+components:
+  schemas:
+    SegmentResponse:
+      type: object
+      properties:
+        path:
+          type: string
+          description: SVG path (normalized coordinates 0..1) describing the object mask.
+        bbox:
+          $ref: '#/components/schemas/BoundingBox'
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+            type:
+              type: string
+    ImageInput:
+      type: string
+      description: Image as a data URL (base64) or a publicly reachable image URL.
+      examples:
+      - data:image/jpeg;base64,/9j/4AAQSkZJRg...
+    CaptionResponse:
+      type: object
+      properties:
+        caption:
+          type: string
+        metrics:
+          $ref: '#/components/schemas/Metrics'
+        finish_reason:
+          type: string
+          examples:
+          - stop
+    QueryRequest:
+      type: object
+      required:
+      - model
+      - image_url
+      - question
+      properties:
+        model:
+          $ref: '#/components/schemas/ModelId'
+        image_url:
+          $ref: '#/components/schemas/ImageInput'
+        question:
+          type: string
+          description: Natural-language question about the image.
+        stream:
+          type: boolean
+          default: false
+          description: Stream the answer token-by-token as server-sent events.
+        reasoning:
+          type: boolean
+          description: Enable reasoning mode for more deliberate answers.
+    Point:
+      type: object
+      description: Normalized center coordinate (0..1).
+      properties:
+        x:
+          type: number
+        y:
+          type: number
+    BoundingBox:
+      type: object
+      description: Normalized bounding box (0..1) relative to image dimensions.
+      properties:
+        x_min:
+          type: number
+        y_min:
+          type: number
+        x_max:
+          type: number
+        y_max:
+          type: number
+    CaptionRequest:
+      type: object
+      required:
+      - model
+      - image_url
+      properties:
+        model:
+          $ref: '#/components/schemas/ModelId'
+        image_url:
+          $ref: '#/components/schemas/ImageInput'
+        length:
+          type: string
+          enum:
+          - short
+          - normal
+          - long
+          default: normal
+          description: Desired caption length.
+        stream:
+          type: boolean
+          default: false
+    Metrics:
+      type: object
+      properties:
+        input_tokens:
+          type: integer
+        output_tokens:
+          type: integer
+        prefill_time_ms:
+          type: number
+        decode_time_ms:
+          type: number
+        ttft_ms:
+          type: number
+    PointResponse:
+      type: object
+      properties:
+        request_id:
+          type: string
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/Point'
+    ModelId:
+      type: string
+      description: Model selection. A base model ID or a saved finetune checkpoint in {base_model}/{finetune_id}@{step} form.
+      examples:
+      - moondream3.1-9B-A2B
+      - moondream3-preview
+    QueryResponse:
+      type: object
+      properties:
+        request_id:
+          type: string
+        answer:
+          type: string
+    DetectRequest:
+      type: object
+      required:
+      - model
+      - image_url
+      - object
+      properties:
+        model:
+          $ref: '#/components/schemas/ModelId'
+        image_url:
+          $ref: '#/components/schemas/ImageInput'
+        object:
+          type: string
+          description: The object class to detect / point at / segment.
+    DetectResponse:
+      type: object
+      properties:
+        request_id:
+          type: string
+        objects:
+          type: array
+          items:
+            $ref: '#/components/schemas/BoundingBox'
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Malformed request (missing model, image, or invalid parameters).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RateLimited:
+      description: Rate limit exceeded (2 req/sec base tier, 10 req/sec for funded accounts).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    MoondreamAuth:
+      type: apiKey
+      in: header
+      name: X-Moondream-Auth
+      description: Moondream API key issued from the Moondream Cloud Console (https://moondream.ai/c/cloud/api-keys).
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: For the OpenAI-compatible endpoint, pass the Moondream API key as an OAuth-style bearer token.
