@@ -1,0 +1,24 @@
+generated: '2026-07-20'
+method: searched
+source: https://moondream.ai/pricing
+docs: https://moondream.ai/pricing
+standards:
+  - id: openai-chat-completions
+    conforms: true
+    evidence: Publishes an OpenAI-compatible /v1/chat/completions endpoint (docs.moondream.ai/openai).
+  - id: soc2
+    conforms: true
+    evidence: "Moondream Cloud lists 'HIPAA and SOC 2 available' on the pricing page."
+  - id: hipaa
+    conforms: true
+    evidence: "Moondream Cloud lists 'HIPAA and SOC 2 available' on the pricing page."
+  - id: oauth2
+    conforms: false
+    evidence: API-key authentication only; no OAuth2 surface.
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: 'Errors returned as an OpenAI-style { error: { message, type } } envelope, not application/problem+json.'
+notes: >-
+  HIPAA and SOC 2 are described as "available" for Moondream Cloud (enterprise),
+  not universally certified for all tiers. Treated as a published compliance
+  program for the Compliance pointer.

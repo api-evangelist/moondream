@@ -1,0 +1,30 @@
+generated: '2026-07-20'
+method: searched
+source: https://moondream.ai/blog
+scheme: model-releases-and-blog
+notes: >-
+  Moondream does not publish a dated API changelog page; releases are announced on
+  the blog (moondream.ai/blog). Recent notable entries below (titles verbatim from
+  the blog index; exact dates not scraped).
+entries:
+  - title: 'Moondream 3.1: Beyond Benchmarks'
+    category: model release
+    url: https://moondream.ai/blog/moondream-3-1-beyond-benchmarks
+  - title: Announcing Moondream Cloud
+    category: announcement
+    url: https://moondream.ai/blog/announcing-moondream-cloud
+  - title: 'Lens: Moondream''s Finetune Service'
+    category: announcement
+    url: https://moondream.ai/blog/lens-moondreams-finetune-service
+  - title: 'Moondream Station: M3 Preview'
+    category: release
+    url: https://moondream.ai/blog/moondream-station-m3-preview
+  - title: 'Photon 1.3.0 Update'
+    category: release
+    url: https://moondream.ai/blog/photon-1-3-0-update
+  - title: 'Photon 1.2.0 Update'
+    category: release
+    url: https://moondream.ai/blog/photon-1-2-0-update
+  - title: 'Photon: Real-time Vision AI is Finally Here'
+    category: announcement
+    url: https://moondream.ai/blog/photon-real-time-vision-ai-is-finally-here

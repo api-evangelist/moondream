@@ -1,0 +1,27 @@
+generated: '2026-07-20'
+method: searched
+source: openapi/moondream-openapi.yml
+docs: https://docs.moondream.ai/api
+summary:
+  types: [apiKey, http]
+  api_key_in: [header]
+  http_schemes: [bearer]
+  oauth2_flows: []
+notes: >-
+  Moondream Cloud authenticates every request with an API key issued from the
+  Moondream Cloud Console (https://moondream.ai/c/cloud/api-keys). Native Skill
+  endpoints (/query, /caption, /detect, /point, /segment) pass the key in the
+  X-Moondream-Auth header. The OpenAI-compatible /chat/completions endpoint takes
+  the same key as an HTTP bearer token (Authorization: Bearer). There is no OAuth
+  or scope surface.
+schemes:
+  - name: MoondreamAuth
+    type: apiKey
+    in: header
+    parameter_name: X-Moondream-Auth
+    sources: [openapi/moondream-openapi.yml]
+  - name: BearerAuth
+    type: http
+    scheme: bearer
+    used_by: [/chat/completions]
+    sources: [openapi/moondream-openapi.yml]

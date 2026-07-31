@@ -1,0 +1,16 @@
+generated: '2026-07-20'
+method: generated
+source: openapi/moondream-openapi.yml
+skills:
+  - file: moondream-visual-qa.md
+    name: Ask questions about an image
+    api: openapi/moondream-openapi.yml
+    operations: [query]
+  - file: moondream-detect-and-point.md
+    name: Detect and locate objects in an image
+    api: openapi/moondream-openapi.yml
+    operations: [detect, point]
+  - file: moondream-caption-image.md
+    name: Caption an image
+    api: openapi/moondream-openapi.yml
+    operations: [caption]

@@ -1,0 +1,27 @@
+generated: '2026-07-20'
+method: derived
+source: openapi/moondream-openapi.yml
+format: openai-error-envelope
+envelope:
+  field: error
+  shape: '{ "error": { "message": string, "type": string } }'
+notes: >-
+  Moondream returns errors in an OpenAI-style envelope rather than RFC 9457
+  problem+json. The problems below are derived from the documented request
+  requirements, authentication, and rate-limit tiers.
+problems:
+  - status: 400
+    title: Bad request
+    detail: Missing model, image_url, or a required skill parameter (question/object), or a malformed image.
+    remediation: Include a valid model ID, a data-URL or reachable image_url, and the skill's required field.
+    source_operation: openapi/moondream-openapi.yml#query
+  - status: 401
+    title: Unauthorized
+    detail: Missing or invalid API key.
+    remediation: Send a valid key in the X-Moondream-Auth header (skills) or as a Bearer token (chat). Manage keys at https://moondream.ai/c/cloud/api-keys.
+    source_operation: openapi/moondream-openapi.yml#query
+  - status: 429
+    title: Rate limited
+    detail: Exceeded the account tier rate limit (2 req/sec base, 10 req/sec for funded accounts >= $10 balance).
+    remediation: Back off and retry; fund the account to $10+ for 10 req/sec, or contact sales@moondream.ai for higher production limits.
+    source_operation: openapi/moondream-openapi.yml#query

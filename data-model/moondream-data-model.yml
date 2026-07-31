@@ -1,0 +1,40 @@
+generated: '2026-07-20'
+method: derived
+source: openapi/moondream-openapi.yml
+notes: >-
+  Moondream Cloud is a stateless inference API — each Skill call takes an image and
+  returns a result; there are no persisted, id-addressable resources in the request
+  path. The "entities" below are the request/response value objects derived from the
+  documented schemas.
+entities:
+  - name: Image
+    kind: input
+    fields: [image_url]
+    description: The image to analyze, supplied as a data URL or public URL.
+  - name: QueryResult
+    fields: [request_id, answer]
+    belongs_to: [Image]
+  - name: CaptionResult
+    fields: [caption, metrics, finish_reason]
+    belongs_to: [Image]
+  - name: DetectResult
+    fields: [request_id, objects]
+    relationships:
+      - has_many: BoundingBox
+        via: objects
+  - name: PointResult
+    fields: [request_id, points]
+    relationships:
+      - has_many: Point
+        via: points
+  - name: SegmentResult
+    fields: [path, bbox]
+    relationships:
+      - has_one: BoundingBox
+        via: bbox
+  - name: BoundingBox
+    fields: [x_min, y_min, x_max, y_max]
+  - name: Point
+    fields: [x, y]
+  - name: Metrics
+    fields: [input_tokens, output_tokens, prefill_time_ms, decode_time_ms, ttft_ms]

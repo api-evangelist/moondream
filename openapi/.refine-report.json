@@ -1,0 +1,16 @@
+{
+  "provider": "moondream",
+  "sources": [
+    "moondream-openai-compatibility-api-openapi.yml",
+    "moondream-skills-api-openapi.yml"
+  ],
+  "outputs": [
+    "moondream-openai-compatibility-api-openapi.yml",
+    "moondream-skills-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

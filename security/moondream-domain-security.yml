@@ -1,0 +1,21 @@
+generated: '2026-07-20'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: moondream.ai
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Sep 24 23:59:59 2026 GMT
+  hsts: false
+- host: api.moondream.ai
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Sep 25 04:35:25 2026 GMT
+  hsts: null
+domains:
+- domain: moondream.ai
+  dnssec: false
+  caa: []
+  spf: false
+  dmarc: true
+  dmarc_policy: none

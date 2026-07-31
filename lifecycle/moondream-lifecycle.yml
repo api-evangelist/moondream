@@ -1,0 +1,29 @@
+generated: '2026-07-20'
+method: searched
+source: https://docs.moondream.ai/api
+versioning:
+  scheme: uri-path
+  current: v1
+  model_versioning: true
+  models:
+    - moondream3.1-9B-A2B
+    - moondream3-preview
+  finetune_ref: '{base_model}/{finetune_id}@{step}'
+  docs: https://docs.moondream.ai/api
+deprecation:
+  policy_url: null
+  sunset_header: false
+  notes: No formal published deprecation/sunset policy found; model IDs are versioned and older previews remain selectable.
+sla:
+  url: null
+  notes: No published uptime SLA; enterprise plans add support (sales@moondream.ai).
+status_page: null
+data_retention:
+  batch_inputs: deleted immediately after processing
+  batch_results: purged after 7 days
+  training_use: never used for training
+deprecated_operations: []
+notes: >-
+  Versioning is expressed through the /v1 URI path and explicit model IDs. No
+  standalone status page, deprecation policy, or SLA page was found as of the
+  probe date.

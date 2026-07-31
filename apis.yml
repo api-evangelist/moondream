@@ -1,25 +1,151 @@
 aid: moondream
 name: Moondream
-description: Moondream is a company surfaced as a portfolio company of felicis and added to the API Evangelist
-  network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: >-
+  Moondream is a fast, efficient open vision language model (VLM) from M87 Labs.
+  The Moondream Cloud API turns images into structured output through five Skills —
+  Query (visual question answering), Caption, Detect (bounding boxes), Point (center
+  coordinates), and Segment (SVG path masks) — plus an OpenAI-compatible chat
+  endpoint, an asynchronous Batch API, and cloud finetuning (Lens). Model weights
+  are open and downloadable from Hugging Face; hosted inference is pay-per-token
+  with HIPAA and SOC 2 available. Official Python and Node.js SDKs are published.
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://moondream.ai/apple-touch-icon.png
 url: https://raw.githubusercontent.com/api-evangelist/moondream/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - felicis
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: active
+x-tier-reason: enriched
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-20'
 tags:
 - Company
-apis: []
+- Artificial Intelligence
+- Machine Learning
+- Computer Vision
+- Vision Language Model
+- Object Detection
+- Image Captioning
+- OCR
+- Developer Tools
+apis:
+- aid: moondream:moondream-openai-compatibility-api
+  name: Moondream OpenAI Compatibility API
+  description: OpenAI-compatible chat completions endpoint.
+  humanURL: https://docs.moondream.ai/api
+  baseURL: https://api.moondream.ai/v1
+  tags:
+  - OpenAI Compatibility
+  properties:
+  - type: OpenAPI
+    url: openapi/moondream-openai-compatibility-api-openapi.yml
+  - type: Documentation
+    url: https://docs.moondream.ai/
+  - type: APIReference
+    url: https://docs.moondream.ai/api
+  - type: GettingStarted
+    url: https://docs.moondream.ai/quickstart
+  - type: RateLimits
+    url: https://docs.moondream.ai/rate-limits
+- aid: moondream:moondream-skills-api
+  name: Moondream Skills API
+  description: Moondream vision Skills — query, caption, detect, point, segment.
+  humanURL: https://docs.moondream.ai/api
+  baseURL: https://api.moondream.ai/v1
+  tags:
+  - Skills
+  properties:
+  - type: OpenAPI
+    url: openapi/moondream-skills-api-openapi.yml
+  - type: Documentation
+    url: https://docs.moondream.ai/
+  - type: APIReference
+    url: https://docs.moondream.ai/api
+  - type: GettingStarted
+    url: https://docs.moondream.ai/quickstart
+  - type: RateLimits
+    url: https://docs.moondream.ai/rate-limits
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Authentication
+  url: authentication/moondream-authentication.yml
+- type: Conventions
+  url: conventions/moondream-conventions.yml
+- type: ErrorCatalog
+  url: errors/moondream-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/moondream-lifecycle.yml
+- type: Conformance
+  url: conformance/moondream-conformance.yml
+- type: Compliance
+  url: https://moondream.ai/pricing
+- type: DataModel
+  url: data-model/moondream-data-model.yml
+- type: Overlay
+  url: overlays/moondream-openapi-overlay.yaml
+- type: Packages
+  url: packages/moondream-packages.yml
+- type: SDKs
+  url: packages/moondream-packages.yml
+- type: MCPServer
+  url: mcp/moondream-mcp.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: LLMsTxt
+  url: llms/moondream-llms.txt
+- type: WellKnown
+  url: well-known/moondream-well-known.yml
+- type: ChangeLog
+  url: changelog/moondream-changelog.yml
+- type: DomainSecurity
+  url: security/moondream-domain-security.yml
+- type: AgenticAccess
+  url: agentic-access/moondream-agentic-access.yml
 - type: Website
   url: https://moondream.ai
+- type: DeveloperPortal
+  url: https://docs.moondream.ai/
+- type: Documentation
+  url: https://docs.moondream.ai/
+- type: APIReference
+  url: https://docs.moondream.ai/api
+- type: GettingStarted
+  url: https://docs.moondream.ai/quickstart
+- type: Blog
+  url: https://moondream.ai/blog
+- type: Pricing
+  url: https://moondream.ai/pricing
+- type: SignUp
+  url: https://moondream.ai/login
+- type: TermsOfService
+  url: https://moondream.ai/terms
+- type: PrivacyPolicy
+  url: https://moondream.ai/privacy
+- type: GitHubOrganization
+  url: https://github.com/m87-labs
+- type: Sandbox
+  url: https://moondream.ai/c/playground
+- type: Support
+  url: mailto:sales@moondream.ai
+x-enrichment:
+  date: '2026-07-20'
+  status: enriched
+  artifacts_added: 19
+  pass: local-v1

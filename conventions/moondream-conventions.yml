@@ -1,0 +1,44 @@
+generated: '2026-07-20'
+method: searched
+source: https://docs.moondream.ai/api
+authentication:
+  style: api-key
+  skill_endpoints: { header: X-Moondream-Auth }
+  openai_endpoint: { header: 'Authorization: Bearer <key>' }
+  ref: authentication/moondream-authentication.yml
+base_url: https://api.moondream.ai/v1
+request:
+  content_type: application/json
+  image_input: data-URL (base64) or public image URL via image_url
+  model_field_required: true
+idempotency:
+  supported: false
+  notes: No idempotency-key header or parameter is documented. Skill calls are stateless single-shot inferences.
+pagination:
+  style: none-for-skills
+  batch: asynchronous — upload JSONL, poll for completion status, then download result files (no cursor pagination).
+request_tracing:
+  field: request_id
+  notes: Query/detect/point responses include a request_id (e.g. 2025-03-25_query_...-715d03).
+streaming:
+  supported: true
+  transport: 'server-sent events (data: {"text": "..."})'
+  skills: [query, caption, segment]
+  param: '"stream": true'
+metrics:
+  field: metrics
+  fields: [input_tokens, output_tokens, prefill_time_ms, decode_time_ms, ttft_ms]
+error_envelope:
+  shape: '{ "error": { "message": string, "type": string } }'
+  ref: errors/moondream-problem-types.yml
+rate_limiting:
+  base_tier: 2 req/sec
+  funded_tier: 10 req/sec (account balance >= $10)
+  ref: lifecycle/moondream-lifecycle.yml
+versioning:
+  scheme: uri-path (/v1) + explicit model IDs
+  ref: lifecycle/moondream-lifecycle.yml
+data_privacy:
+  training_use: never
+  batch_input_retention: deleted after processing
+  batch_result_retention: 7 days
