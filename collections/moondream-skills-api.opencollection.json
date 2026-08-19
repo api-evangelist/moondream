@@ -1,0 +1,101 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Moondream Cloud OpenAI Compatibility Skills API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Moondream-Auth",
+      "value": "{{X-Moondream-Auth}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Skills",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Visual question answering",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.moondream.ai/v1/query",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Ask a natural-language question about an image and receive an answer. Supports streaming."
+        },
+        {
+          "info": {
+            "name": "Image captioning",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.moondream.ai/v1/caption",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Generate a natural-language description of an image. Supports streaming and a length hint."
+        },
+        {
+          "info": {
+            "name": "Object detection",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.moondream.ai/v1/detect",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Identify and locate objects in an image, returning normalized bounding boxes."
+        },
+        {
+          "info": {
+            "name": "Object pointing",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.moondream.ai/v1/point",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get precise normalized center coordinates for objects in an image."
+        },
+        {
+          "info": {
+            "name": "Image segmentation",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.moondream.ai/v1/segment",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Generate an SVG path segmentation mask for an object in an image."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

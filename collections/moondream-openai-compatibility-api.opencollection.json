@@ -1,0 +1,45 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Moondream Cloud OpenAI Compatibility API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Moondream-Auth",
+      "value": "{{X-Moondream-Auth}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "OpenAI Compatibility",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "OpenAI-compatible chat completion",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.moondream.ai/v1/chat/completions",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "OpenAI-compatible chat endpoint supporting multi-turn conversations, image inputs, streaming, and reasoning. Point any OpenAI client at https://api.moondream.ai/v1 with a Moondream API key as the bearer token."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

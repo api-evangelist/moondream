@@ -5,23 +5,28 @@ source: openapi/moondream-openapi.yml
 server:
   name: moondream
   transport: http
-  description: >-
-    Candidate MCP server derived from the documented Moondream Cloud Skill
-    operations. No official Moondream-hosted MCP server was found as of the probe
-    date; this is a proposed tool surface, not a published endpoint.
+  description: Candidate MCP server derived from the documented Moondream Cloud Skill operations. No official
+    Moondream-hosted MCP server was found as of the probe date; this is a proposed tool surface, not a
+    published endpoint.
 tools:
-  - name: query_image
-    description: Ask a natural-language question about an image (visual question answering).
-    source_operation: openapi/moondream-openapi.yml#query
-  - name: caption_image
-    description: Generate a natural-language caption for an image.
-    source_operation: openapi/moondream-openapi.yml#caption
-  - name: detect_objects
-    description: Detect objects in an image and return normalized bounding boxes.
-    source_operation: openapi/moondream-openapi.yml#detect
-  - name: point_objects
-    description: Return normalized center coordinates for objects in an image.
-    source_operation: openapi/moondream-openapi.yml#point
-  - name: segment_object
-    description: Generate an SVG path segmentation mask for an object in an image.
-    source_operation: openapi/moondream-openapi.yml#segment
+- name: query_image
+  description: Ask a natural-language question about an image (visual question answering).
+  source_operation: openapi/moondream-openapi.yml#query
+- name: caption_image
+  description: Generate a natural-language caption for an image.
+  source_operation: openapi/moondream-openapi.yml#caption
+- name: detect_objects
+  description: Detect objects in an image and return normalized bounding boxes.
+  source_operation: openapi/moondream-openapi.yml#detect
+- name: point_objects
+  description: Return normalized center coordinates for objects in an image.
+  source_operation: openapi/moondream-openapi.yml#point
+- name: segment_object
+  description: Generate an SVG path segmentation mask for an object in an image.
+  source_operation: openapi/moondream-openapi.yml#segment
+deployment:
+  mode: none
+  verified: derived
+  tools: 5
+  checked: '2026-08-12'
+  source: catalog MCP census
