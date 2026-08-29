@@ -8,6 +8,18 @@ description: >-
   endpoint, an asynchronous Batch API, and cloud finetuning (Lens). Model weights
   are open and downloadable from Hugging Face; hosted inference is pay-per-token
   with HIPAA and SOC 2 available. Official Python and Node.js SDKs are published.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: unknown
   onboarding: self-serve
