@@ -1,8 +1,8 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Moondream Cloud OpenAI Compatibility Skills API
+  title: Moondream Cloud Skills API
   version: '1.0'
-  description: Moondream is a fast, efficient open vision language model (VLM). The Moondream Cloud API exposes the model's "Skills" — Query (visual question answering), Caption, Detect (object detection with bounding boxes), Point (object center coordinates), and Segment (SVG path masks) — plus an OpenAI-compatible chat endpoint. Endpoints, request bodies, and responses in this specification are modeled faithfully from the published Moondream documentation (https://docs.moondream.ai). This is an API Evangelist generated spec; Moondream does not publish an OpenAPI document.
+  description: Moondream is a fast, efficient open vision language model (VLM).
   contact:
     name: Moondream (M87 Labs)
     url: https://moondream.ai
@@ -161,61 +161,6 @@ components:
           description: SVG path (normalized coordinates 0..1) describing the object mask.
         bbox:
           $ref: '#/components/schemas/BoundingBox'
-    Error:
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            message:
-              type: string
-            type:
-              type: string
-    ImageInput:
-      type: string
-      description: Image as a data URL (base64) or a publicly reachable image URL.
-      examples:
-      - data:image/jpeg;base64,/9j/4AAQSkZJRg...
-    CaptionResponse:
-      type: object
-      properties:
-        caption:
-          type: string
-        metrics:
-          $ref: '#/components/schemas/Metrics'
-        finish_reason:
-          type: string
-          examples:
-          - stop
-    QueryRequest:
-      type: object
-      required:
-      - model
-      - image_url
-      - question
-      properties:
-        model:
-          $ref: '#/components/schemas/ModelId'
-        image_url:
-          $ref: '#/components/schemas/ImageInput'
-        question:
-          type: string
-          description: Natural-language question about the image.
-        stream:
-          type: boolean
-          default: false
-          description: Stream the answer token-by-token as server-sent events.
-        reasoning:
-          type: boolean
-          description: Enable reasoning mode for more deliberate answers.
-    Point:
-      type: object
-      description: Normalized center coordinate (0..1).
-      properties:
-        x:
-          type: number
-        y:
-          type: number
     BoundingBox:
       type: object
       description: Normalized bounding box (0..1) relative to image dimensions.
@@ -228,6 +173,42 @@ components:
           type: number
         y_max:
           type: number
+    DetectResponse:
+      type: object
+      properties:
+        request_id:
+          type: string
+        objects:
+          type: array
+          items:
+            $ref: '#/components/schemas/BoundingBox'
+    PointResponse:
+      type: object
+      properties:
+        request_id:
+          type: string
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/Point'
+    CaptionResponse:
+      type: object
+      properties:
+        caption:
+          type: string
+        metrics:
+          $ref: '#/components/schemas/Metrics'
+        finish_reason:
+          type: string
+          examples:
+          - stop
+    QueryResponse:
+      type: object
+      properties:
+        request_id:
+          type: string
+        answer:
+          type: string
     CaptionRequest:
       type: object
       required:
@@ -262,28 +243,46 @@ components:
           type: number
         ttft_ms:
           type: number
-    PointResponse:
+    Point:
       type: object
+      description: Normalized center coordinate (0..1).
       properties:
-        request_id:
-          type: string
-        points:
-          type: array
-          items:
-            $ref: '#/components/schemas/Point'
+        x:
+          type: number
+        y:
+          type: number
+    ImageInput:
+      type: string
+      description: Image as a data URL (base64) or a publicly reachable image URL.
+      examples:
+      - data:image/jpeg;base64,/9j/4AAQSkZJRg...
     ModelId:
       type: string
       description: Model selection. A base model ID or a saved finetune checkpoint in {base_model}/{finetune_id}@{step} form.
       examples:
       - moondream3.1-9B-A2B
       - moondream3-preview
-    QueryResponse:
+    QueryRequest:
       type: object
+      required:
+      - model
+      - image_url
+      - question
       properties:
-        request_id:
+        model:
+          $ref: '#/components/schemas/ModelId'
+        image_url:
+          $ref: '#/components/schemas/ImageInput'
+        question:
           type: string
-        answer:
-          type: string
+          description: Natural-language question about the image.
+        stream:
+          type: boolean
+          default: false
+          description: Stream the answer token-by-token as server-sent events.
+        reasoning:
+          type: boolean
+          description: Enable reasoning mode for more deliberate answers.
     DetectRequest:
       type: object
       required:
@@ -298,15 +297,16 @@ components:
         object:
           type: string
           description: The object class to detect / point at / segment.
-    DetectResponse:
+    Error:
       type: object
       properties:
-        request_id:
-          type: string
-        objects:
-          type: array
-          items:
-            $ref: '#/components/schemas/BoundingBox'
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+            type:
+              type: string
   responses:
     Unauthorized:
       description: Missing or invalid API key.
@@ -314,14 +314,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Malformed request (missing model, image, or invalid parameters).
+    RateLimited:
+      description: Rate limit exceeded (2 req/sec base tier, 10 req/sec for funded accounts).
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    RateLimited:
-      description: Rate limit exceeded (2 req/sec base tier, 10 req/sec for funded accounts).
+    BadRequest:
+      description: Malformed request (missing model, image, or invalid parameters).
       content:
         application/json:
           schema:

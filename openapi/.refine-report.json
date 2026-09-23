@@ -1,8 +1,7 @@
 {
   "provider": "moondream",
   "sources": [
-    "moondream-openai-compatibility-api-openapi.yml",
-    "moondream-skills-api-openapi.yml"
+    "_original/moondream-openapi.yml"
   ],
   "outputs": [
     "moondream-openai-compatibility-api-openapi.yml",
@@ -11,6 +10,13 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "moondream-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "moondream-openai-compatibility-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "moondream-skills-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
