@@ -153,62 +153,6 @@ paths:
           $ref: '#/components/responses/BadRequest'
 components:
   schemas:
-    SegmentResponse:
-      type: object
-      properties:
-        path:
-          type: string
-          description: SVG path (normalized coordinates 0..1) describing the object mask.
-        bbox:
-          $ref: '#/components/schemas/BoundingBox'
-    BoundingBox:
-      type: object
-      description: Normalized bounding box (0..1) relative to image dimensions.
-      properties:
-        x_min:
-          type: number
-        y_min:
-          type: number
-        x_max:
-          type: number
-        y_max:
-          type: number
-    DetectResponse:
-      type: object
-      properties:
-        request_id:
-          type: string
-        objects:
-          type: array
-          items:
-            $ref: '#/components/schemas/BoundingBox'
-    PointResponse:
-      type: object
-      properties:
-        request_id:
-          type: string
-        points:
-          type: array
-          items:
-            $ref: '#/components/schemas/Point'
-    CaptionResponse:
-      type: object
-      properties:
-        caption:
-          type: string
-        metrics:
-          $ref: '#/components/schemas/Metrics'
-        finish_reason:
-          type: string
-          examples:
-          - stop
-    QueryResponse:
-      type: object
-      properties:
-        request_id:
-          type: string
-        answer:
-          type: string
     CaptionRequest:
       type: object
       required:
@@ -230,6 +174,33 @@ components:
         stream:
           type: boolean
           default: false
+    PointResponse:
+      type: object
+      properties:
+        request_id:
+          type: string
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/Point'
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+            type:
+              type: string
+    Point:
+      type: object
+      description: Normalized center coordinate (0..1).
+      properties:
+        x:
+          type: number
+        y:
+          type: number
     Metrics:
       type: object
       properties:
@@ -243,25 +214,20 @@ components:
           type: number
         ttft_ms:
           type: number
-    Point:
-      type: object
-      description: Normalized center coordinate (0..1).
-      properties:
-        x:
-          type: number
-        y:
-          type: number
-    ImageInput:
-      type: string
-      description: Image as a data URL (base64) or a publicly reachable image URL.
-      examples:
-      - data:image/jpeg;base64,/9j/4AAQSkZJRg...
     ModelId:
       type: string
       description: Model selection. A base model ID or a saved finetune checkpoint in {base_model}/{finetune_id}@{step} form.
       examples:
       - moondream3.1-9B-A2B
       - moondream3-preview
+    SegmentResponse:
+      type: object
+      properties:
+        path:
+          type: string
+          description: SVG path (normalized coordinates 0..1) describing the object mask.
+        bbox:
+          $ref: '#/components/schemas/BoundingBox'
     QueryRequest:
       type: object
       required:
@@ -283,6 +249,11 @@ components:
         reasoning:
           type: boolean
           description: Enable reasoning mode for more deliberate answers.
+    ImageInput:
+      type: string
+      description: Image as a data URL (base64) or a publicly reachable image URL.
+      examples:
+      - data:image/jpeg;base64,/9j/4AAQSkZJRg...
     DetectRequest:
       type: object
       required:
@@ -297,19 +268,48 @@ components:
         object:
           type: string
           description: The object class to detect / point at / segment.
-    Error:
+    CaptionResponse:
       type: object
       properties:
-        error:
-          type: object
-          properties:
-            message:
-              type: string
-            type:
-              type: string
+        caption:
+          type: string
+        metrics:
+          $ref: '#/components/schemas/Metrics'
+        finish_reason:
+          type: string
+          examples:
+          - stop
+    BoundingBox:
+      type: object
+      description: Normalized bounding box (0..1) relative to image dimensions.
+      properties:
+        x_min:
+          type: number
+        y_min:
+          type: number
+        x_max:
+          type: number
+        y_max:
+          type: number
+    DetectResponse:
+      type: object
+      properties:
+        request_id:
+          type: string
+        objects:
+          type: array
+          items:
+            $ref: '#/components/schemas/BoundingBox'
+    QueryResponse:
+      type: object
+      properties:
+        request_id:
+          type: string
+        answer:
+          type: string
   responses:
-    Unauthorized:
-      description: Missing or invalid API key.
+    BadRequest:
+      description: Malformed request (missing model, image, or invalid parameters).
       content:
         application/json:
           schema:
@@ -320,8 +320,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Malformed request (missing model, image, or invalid parameters).
+    Unauthorized:
+      description: Missing or invalid API key.
       content:
         application/json:
           schema:

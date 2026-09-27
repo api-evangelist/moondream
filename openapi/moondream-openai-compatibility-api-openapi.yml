@@ -51,6 +51,12 @@ paths:
           $ref: '#/components/responses/BadRequest'
 components:
   responses:
+    BadRequest:
+      description: Malformed request (missing model, image, or invalid parameters).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     RateLimited:
       description: Rate limit exceeded (2 req/sec base tier, 10 req/sec for funded accounts).
       content:
@@ -59,12 +65,6 @@ components:
             $ref: '#/components/schemas/Error'
     Unauthorized:
       description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Malformed request (missing model, image, or invalid parameters).
       content:
         application/json:
           schema:
@@ -97,6 +97,12 @@ components:
                     type: string
               finish_reason:
                 type: string
+    ModelId:
+      type: string
+      description: Model selection. A base model ID or a saved finetune checkpoint in {base_model}/{finetune_id}@{step} form.
+      examples:
+      - moondream3.1-9B-A2B
+      - moondream3-preview
     ChatCompletionRequest:
       type: object
       required:
@@ -121,12 +127,6 @@ components:
         stream:
           type: boolean
           default: false
-    ModelId:
-      type: string
-      description: Model selection. A base model ID or a saved finetune checkpoint in {base_model}/{finetune_id}@{step} form.
-      examples:
-      - moondream3.1-9B-A2B
-      - moondream3-preview
     Error:
       type: object
       properties:

@@ -47,8 +47,8 @@ modified: '2026-07-20'
 tags:
 - Company
 - Artificial Intelligence
-- Machine-Learning
-- Computer-Vision
+- Machine Learning
+- Computer Vision
 - Vision Language Model
 - Object Detection
 - Image Captioning
@@ -64,6 +64,8 @@ tags_raw:
 - Image Captioning
 - OCR
 - Developer Tools
+- Machine-Learning
+- Computer-Vision
 apis:
 - aid: moondream:moondream-openai-compatibility-api
   name: Moondream OpenAI Compatibility API
