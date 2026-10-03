@@ -50,25 +50,6 @@ paths:
         '400':
           $ref: '#/components/responses/BadRequest'
 components:
-  responses:
-    BadRequest:
-      description: Malformed request (missing model, image, or invalid parameters).
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    RateLimited:
-      description: Rate limit exceeded (2 req/sec base tier, 10 req/sec for funded accounts).
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
     ChatCompletionResponse:
       type: object
@@ -97,6 +78,16 @@ components:
                     type: string
               finish_reason:
                 type: string
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+            type:
+              type: string
     ModelId:
       type: string
       description: Model selection. A base model ID or a saved finetune checkpoint in {base_model}/{finetune_id}@{step} form.
@@ -127,16 +118,25 @@ components:
         stream:
           type: boolean
           default: false
-    Error:
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            message:
-              type: string
-            type:
-              type: string
+  responses:
+    BadRequest:
+      description: Malformed request (missing model, image, or invalid parameters).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RateLimited:
+      description: Rate limit exceeded (2 req/sec base tier, 10 req/sec for funded accounts).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     MoondreamAuth:
       type: apiKey

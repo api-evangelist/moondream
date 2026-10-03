@@ -153,6 +153,25 @@ paths:
           $ref: '#/components/responses/BadRequest'
 components:
   schemas:
+    CaptionResponse:
+      type: object
+      properties:
+        caption:
+          type: string
+        metrics:
+          $ref: '#/components/schemas/Metrics'
+        finish_reason:
+          type: string
+          examples:
+          - stop
+    SegmentResponse:
+      type: object
+      properties:
+        path:
+          type: string
+          description: SVG path (normalized coordinates 0..1) describing the object mask.
+        bbox:
+          $ref: '#/components/schemas/BoundingBox'
     CaptionRequest:
       type: object
       required:
@@ -174,25 +193,6 @@ components:
         stream:
           type: boolean
           default: false
-    PointResponse:
-      type: object
-      properties:
-        request_id:
-          type: string
-        points:
-          type: array
-          items:
-            $ref: '#/components/schemas/Point'
-    Error:
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            message:
-              type: string
-            type:
-              type: string
     Point:
       type: object
       description: Normalized center coordinate (0..1).
@@ -201,33 +201,6 @@ components:
           type: number
         y:
           type: number
-    Metrics:
-      type: object
-      properties:
-        input_tokens:
-          type: integer
-        output_tokens:
-          type: integer
-        prefill_time_ms:
-          type: number
-        decode_time_ms:
-          type: number
-        ttft_ms:
-          type: number
-    ModelId:
-      type: string
-      description: Model selection. A base model ID or a saved finetune checkpoint in {base_model}/{finetune_id}@{step} form.
-      examples:
-      - moondream3.1-9B-A2B
-      - moondream3-preview
-    SegmentResponse:
-      type: object
-      properties:
-        path:
-          type: string
-          description: SVG path (normalized coordinates 0..1) describing the object mask.
-        bbox:
-          $ref: '#/components/schemas/BoundingBox'
     QueryRequest:
       type: object
       required:
@@ -249,11 +222,36 @@ components:
         reasoning:
           type: boolean
           description: Enable reasoning mode for more deliberate answers.
+    PointResponse:
+      type: object
+      properties:
+        request_id:
+          type: string
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/Point'
     ImageInput:
       type: string
       description: Image as a data URL (base64) or a publicly reachable image URL.
       examples:
       - data:image/jpeg;base64,/9j/4AAQSkZJRg...
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+            type:
+              type: string
+    ModelId:
+      type: string
+      description: Model selection. A base model ID or a saved finetune checkpoint in {base_model}/{finetune_id}@{step} form.
+      examples:
+      - moondream3.1-9B-A2B
+      - moondream3-preview
     DetectRequest:
       type: object
       required:
@@ -268,17 +266,15 @@ components:
         object:
           type: string
           description: The object class to detect / point at / segment.
-    CaptionResponse:
+    DetectResponse:
       type: object
       properties:
-        caption:
+        request_id:
           type: string
-        metrics:
-          $ref: '#/components/schemas/Metrics'
-        finish_reason:
-          type: string
-          examples:
-          - stop
+        objects:
+          type: array
+          items:
+            $ref: '#/components/schemas/BoundingBox'
     BoundingBox:
       type: object
       description: Normalized bounding box (0..1) relative to image dimensions.
@@ -291,15 +287,6 @@ components:
           type: number
         y_max:
           type: number
-    DetectResponse:
-      type: object
-      properties:
-        request_id:
-          type: string
-        objects:
-          type: array
-          items:
-            $ref: '#/components/schemas/BoundingBox'
     QueryResponse:
       type: object
       properties:
@@ -307,6 +294,19 @@ components:
           type: string
         answer:
           type: string
+    Metrics:
+      type: object
+      properties:
+        input_tokens:
+          type: integer
+        output_tokens:
+          type: integer
+        prefill_time_ms:
+          type: number
+        decode_time_ms:
+          type: number
+        ttft_ms:
+          type: number
   responses:
     BadRequest:
       description: Malformed request (missing model, image, or invalid parameters).
