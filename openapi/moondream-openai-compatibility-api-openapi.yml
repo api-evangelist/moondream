@@ -51,6 +51,46 @@ paths:
           $ref: '#/components/responses/BadRequest'
 components:
   schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+            type:
+              type: string
+    ChatCompletionRequest:
+      type: object
+      required:
+      - model
+      - messages
+      properties:
+        model:
+          $ref: '#/components/schemas/ModelId'
+        messages:
+          type: array
+          items:
+            type: object
+            properties:
+              role:
+                type: string
+                enum:
+                - system
+                - user
+                - assistant
+              content:
+                description: Text or an array of content parts (text and image_url) for multimodal input.
+        stream:
+          type: boolean
+          default: false
+    ModelId:
+      type: string
+      description: Model selection. A base model ID or a saved finetune checkpoint in {base_model}/{finetune_id}@{step} form.
+      examples:
+      - moondream3.1-9B-A2B
+      - moondream3-preview
     ChatCompletionResponse:
       type: object
       properties:
@@ -78,46 +118,6 @@ components:
                     type: string
               finish_reason:
                 type: string
-    Error:
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            message:
-              type: string
-            type:
-              type: string
-    ModelId:
-      type: string
-      description: Model selection. A base model ID or a saved finetune checkpoint in {base_model}/{finetune_id}@{step} form.
-      examples:
-      - moondream3.1-9B-A2B
-      - moondream3-preview
-    ChatCompletionRequest:
-      type: object
-      required:
-      - model
-      - messages
-      properties:
-        model:
-          $ref: '#/components/schemas/ModelId'
-        messages:
-          type: array
-          items:
-            type: object
-            properties:
-              role:
-                type: string
-                enum:
-                - system
-                - user
-                - assistant
-              content:
-                description: Text or an array of content parts (text and image_url) for multimodal input.
-        stream:
-          type: boolean
-          default: false
   responses:
     BadRequest:
       description: Malformed request (missing model, image, or invalid parameters).
@@ -125,14 +125,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    RateLimited:
-      description: Rate limit exceeded (2 req/sec base tier, 10 req/sec for funded accounts).
+    Unauthorized:
+      description: Missing or invalid API key.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid API key.
+    RateLimited:
+      description: Rate limit exceeded (2 req/sec base tier, 10 req/sec for funded accounts).
       content:
         application/json:
           schema:

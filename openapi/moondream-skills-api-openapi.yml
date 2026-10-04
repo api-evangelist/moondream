@@ -153,54 +153,15 @@ paths:
           $ref: '#/components/responses/BadRequest'
 components:
   schemas:
-    CaptionResponse:
+    DetectResponse:
       type: object
       properties:
-        caption:
+        request_id:
           type: string
-        metrics:
-          $ref: '#/components/schemas/Metrics'
-        finish_reason:
-          type: string
-          examples:
-          - stop
-    SegmentResponse:
-      type: object
-      properties:
-        path:
-          type: string
-          description: SVG path (normalized coordinates 0..1) describing the object mask.
-        bbox:
-          $ref: '#/components/schemas/BoundingBox'
-    CaptionRequest:
-      type: object
-      required:
-      - model
-      - image_url
-      properties:
-        model:
-          $ref: '#/components/schemas/ModelId'
-        image_url:
-          $ref: '#/components/schemas/ImageInput'
-        length:
-          type: string
-          enum:
-          - short
-          - normal
-          - long
-          default: normal
-          description: Desired caption length.
-        stream:
-          type: boolean
-          default: false
-    Point:
-      type: object
-      description: Normalized center coordinate (0..1).
-      properties:
-        x:
-          type: number
-        y:
-          type: number
+        objects:
+          type: array
+          items:
+            $ref: '#/components/schemas/BoundingBox'
     QueryRequest:
       type: object
       required:
@@ -222,20 +183,27 @@ components:
         reasoning:
           type: boolean
           description: Enable reasoning mode for more deliberate answers.
-    PointResponse:
+    CaptionRequest:
       type: object
+      required:
+      - model
+      - image_url
       properties:
-        request_id:
+        model:
+          $ref: '#/components/schemas/ModelId'
+        image_url:
+          $ref: '#/components/schemas/ImageInput'
+        length:
           type: string
-        points:
-          type: array
-          items:
-            $ref: '#/components/schemas/Point'
-    ImageInput:
-      type: string
-      description: Image as a data URL (base64) or a publicly reachable image URL.
-      examples:
-      - data:image/jpeg;base64,/9j/4AAQSkZJRg...
+          enum:
+          - short
+          - normal
+          - long
+          default: normal
+          description: Desired caption length.
+        stream:
+          type: boolean
+          default: false
     Error:
       type: object
       properties:
@@ -246,35 +214,17 @@ components:
               type: string
             type:
               type: string
-    ModelId:
-      type: string
-      description: Model selection. A base model ID or a saved finetune checkpoint in {base_model}/{finetune_id}@{step} form.
-      examples:
-      - moondream3.1-9B-A2B
-      - moondream3-preview
-    DetectRequest:
-      type: object
-      required:
-      - model
-      - image_url
-      - object
-      properties:
-        model:
-          $ref: '#/components/schemas/ModelId'
-        image_url:
-          $ref: '#/components/schemas/ImageInput'
-        object:
-          type: string
-          description: The object class to detect / point at / segment.
-    DetectResponse:
+    CaptionResponse:
       type: object
       properties:
-        request_id:
+        caption:
           type: string
-        objects:
-          type: array
-          items:
-            $ref: '#/components/schemas/BoundingBox'
+        metrics:
+          $ref: '#/components/schemas/Metrics'
+        finish_reason:
+          type: string
+          examples:
+          - stop
     BoundingBox:
       type: object
       description: Normalized bounding box (0..1) relative to image dimensions.
@@ -294,6 +244,11 @@ components:
           type: string
         answer:
           type: string
+    ImageInput:
+      type: string
+      description: Image as a data URL (base64) or a publicly reachable image URL.
+      examples:
+      - data:image/jpeg;base64,/9j/4AAQSkZJRg...
     Metrics:
       type: object
       properties:
@@ -307,6 +262,51 @@ components:
           type: number
         ttft_ms:
           type: number
+    DetectRequest:
+      type: object
+      required:
+      - model
+      - image_url
+      - object
+      properties:
+        model:
+          $ref: '#/components/schemas/ModelId'
+        image_url:
+          $ref: '#/components/schemas/ImageInput'
+        object:
+          type: string
+          description: The object class to detect / point at / segment.
+    SegmentResponse:
+      type: object
+      properties:
+        path:
+          type: string
+          description: SVG path (normalized coordinates 0..1) describing the object mask.
+        bbox:
+          $ref: '#/components/schemas/BoundingBox'
+    Point:
+      type: object
+      description: Normalized center coordinate (0..1).
+      properties:
+        x:
+          type: number
+        y:
+          type: number
+    PointResponse:
+      type: object
+      properties:
+        request_id:
+          type: string
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/Point'
+    ModelId:
+      type: string
+      description: Model selection. A base model ID or a saved finetune checkpoint in {base_model}/{finetune_id}@{step} form.
+      examples:
+      - moondream3.1-9B-A2B
+      - moondream3-preview
   responses:
     BadRequest:
       description: Malformed request (missing model, image, or invalid parameters).
@@ -314,14 +314,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    RateLimited:
-      description: Rate limit exceeded (2 req/sec base tier, 10 req/sec for funded accounts).
+    Unauthorized:
+      description: Missing or invalid API key.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid API key.
+    RateLimited:
+      description: Rate limit exceeded (2 req/sec base tier, 10 req/sec for funded accounts).
       content:
         application/json:
           schema:
