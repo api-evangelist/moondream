@@ -1,34 +1,46 @@
-generated: '2026-07-20'
+generated: '2026-09-23'
 method: generated
-source: openapi/moondream-openapi.yml
+source: openapi/moondream-openai-compatibility-api-openapi.yml, openapi/moondream-skills-api-openapi.yml
 description: Recommended x-agentic-access execution contracts, classified heuristically from
   the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
   audience per deployment. See research/curity/agentic-governance/.
 summary:
   operations: 6
   by_action_class:
-    acting: 6
+    acting: 5
+    connected: 1
   by_consequence:
-    safety-critical: 5
     write: 1
-  human_in_the_loop_required: 5
+    read: 1
+    safety-critical: 4
+  human_in_the_loop_required: 4
 operations:
+- path: /chat/completions
+  method: post
+  operationId: createChatCompletion
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
 - path: /query
   method: post
   operationId: query
   x-agentic-access:
-    action-class: acting
-    consequence: safety-critical
-    subject: required
-    audience: null
+    action-class: connected
+    consequence: read
+    subject: optional
     token:
-      max-ttl: 120
-      exchange: true
-      purpose-required: true
-      proof-of-possession: true
-    escalation:
-      human-in-the-loop: required
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /caption
   method: post
   operationId: caption
@@ -92,20 +104,4 @@ operations:
       proof-of-possession: true
     escalation:
       human-in-the-loop: required
-    audit: required
-- path: /chat/completions
-  method: post
-  operationId: createChatCompletion
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
     audit: required

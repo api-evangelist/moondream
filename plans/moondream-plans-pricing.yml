@@ -1,0 +1,216 @@
+# Pricing transcribed from the provider's own page — see provenance. Numbers are quoted, not derived.
+generated: '2026-10-07'
+method: searched
+source: https://moondream.ai/pricing
+sources:
+- https://moondream.ai/pricing
+provenance:
+  tool: all/0-working/economics/harvest_pricing.py
+  run: 20261007T104522
+  grounding: every price_text was found verbatim in the fetched page text
+audience: developer-api
+pricing_basis: per-call
+delivery:
+  delivery: open-core
+  method: page
+  read: '2026-10-07'
+  evidence: Models Free Open and free to use — hosting them as a cloud service requires our license.
+  free_edition: Models
+  managed_tier: Cloud
+published: true
+note: Token-based API pricing plus collaboration tiers; models free to download but cloud hosting them
+  requires a license.
+plan_count: 13
+currency: USD
+plans:
+- name: Photon
+  price_text: Free
+  period: none
+  included_quota: The world's fastest VLM inference engine — runs everywhere, from edge to server-class
+    hardware.
+- name: Models
+  price_text: Free
+  period: none
+  included_quota: Open and free to use — hosting them as a cloud service requires our license.
+- name: Cloud — Moondream 3.1 9B A2B Real-time input
+  price_text: $0.30 / 1M input tokens
+  price: 0.3
+  currency: USD
+  period: per-use
+  unit: 1M input tokens
+- name: Cloud — Moondream 3.1 9B A2B Real-time output
+  price_text: $1.00 / 1M output tokens
+  price: 1.0
+  currency: USD
+  period: per-use
+  unit: 1M output tokens
+- name: Cloud — Moondream 3.1 9B A2B Batch input
+  price_text: $0.15 / 1M input tokens
+  price: 0.15
+  currency: USD
+  period: per-use
+  unit: 1M input tokens
+- name: Cloud — Moondream 3.1 9B A2B Batch output
+  price_text: $0.50 / 1M output tokens
+  price: 0.5
+  currency: USD
+  period: per-use
+  unit: 1M output tokens
+- name: Cloud — Moondream 3 Preview Real-time output
+  price_text: $2.50 / 1M output tokens
+  price: 2.5
+  currency: USD
+  period: per-use
+  unit: 1M output tokens
+- name: Cloud — Moondream 3 Preview Batch output
+  price_text: $1.25 / 1M output tokens
+  price: 1.25
+  currency: USD
+  period: per-use
+  unit: 1M output tokens
+- name: Lens Training
+  price_text: $0.60 / 1M training tokens
+  price: 0.6
+  currency: USD
+  period: per-use
+  unit: 1M training tokens
+- name: Free
+  price_text: $0 / month
+  price: 0
+  currency: USD
+  period: month
+  unit: workspace
+  included_quota: 1 seat, Personal workspace, Discord support, $5/month usage credits
+- name: Team
+  price_text: $350 / month
+  price: 350
+  currency: USD
+  period: month
+  unit: workspace
+  included_quota: 10 seats, Shared fine-tunes, Shared projects, Shared API keys, Shared billing, Dedicated
+    Slack, 1h/month consulting, $5/month usage credits
+  overage: Additional seats available. Contact us.
+- name: Team (annual)
+  price_text: $300 /mo billed annually
+  price: 300
+  currency: USD
+  period: month
+  unit: workspace
+- name: Enterprise
+  price_text: Custom
+  period: none
+  included_quota: Custom seats, HIPAA / BAA available, Security review, Priority support, Custom deployment
+    support, Custom billing
+rate_limit_statements:
+- Usage and rate limits still apply.
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - hybrid
+  - metered
+  units:
+  - object
+  - token
+  plans:
+  - name: Photon
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods:
+    - none
+  - name: Models
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods:
+    - none
+  - name: Cloud — Moondream 3.1 9B A2B Real-time input
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - token
+    periods:
+    - other
+  - name: Cloud — Moondream 3.1 9B A2B Real-time output
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - token
+    periods:
+    - other
+  - name: Cloud — Moondream 3.1 9B A2B Batch input
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - token
+    periods:
+    - other
+  - name: Cloud — Moondream 3.1 9B A2B Batch output
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - token
+    periods:
+    - other
+  - name: Cloud — Moondream 3 Preview Real-time output
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - token
+    periods:
+    - other
+  - name: Cloud — Moondream 3 Preview Batch output
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - token
+    periods:
+    - other
+  - name: Lens Training
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - token
+    periods:
+    - other
+  - name: Free
+    access: other
+    model: metered
+    model_how: derived
+    units:
+    - object
+    periods:
+    - month
+  - name: Team
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - object
+    periods:
+    - month
+  - name: Team (annual)
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - object
+    periods:
+    - month
+  - name: Enterprise
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods:
+    - none
