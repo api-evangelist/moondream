@@ -1,0 +1,22 @@
+edges:
+- partner_name: OpenAI
+  partner: openai
+  partner_match: domain
+  type: contract
+  channel: provider-built
+  relationship: compatible
+  direction: provider-built
+  evidence: https://github.com/api-evangelist/moondream/blob/main/openapi/moondream-openai-compatibility-api-openapi.yml#L3
+  contract_reference:
+    repo: moondream
+    spec_file: moondream-openai-compatibility-api-openapi.yml
+    property: description
+    value: OpenAI-compatible
+    note: 'moondream declares OpenAI compatibility: ''title: Moondream Cloud OpenAI Compatibility API'''
+    detected_by: sweep-model-routing.py
+    detected: '2026-10-13'
+  detected_by: sweep-model-routing.py
+  first_seen: '2026-10-13'
+generated: '2026-10-13'
+method: searched
+checked: []
