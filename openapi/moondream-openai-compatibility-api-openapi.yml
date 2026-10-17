@@ -51,6 +51,12 @@ paths:
           $ref: '#/components/responses/BadRequest'
 components:
   schemas:
+    ModelId:
+      type: string
+      description: Model selection. A base model ID or a saved finetune checkpoint in {base_model}/{finetune_id}@{step} form.
+      examples:
+      - moondream3.1-9B-A2B
+      - moondream3-preview
     Error:
       type: object
       properties:
@@ -61,36 +67,6 @@ components:
               type: string
             type:
               type: string
-    ChatCompletionRequest:
-      type: object
-      required:
-      - model
-      - messages
-      properties:
-        model:
-          $ref: '#/components/schemas/ModelId'
-        messages:
-          type: array
-          items:
-            type: object
-            properties:
-              role:
-                type: string
-                enum:
-                - system
-                - user
-                - assistant
-              content:
-                description: Text or an array of content parts (text and image_url) for multimodal input.
-        stream:
-          type: boolean
-          default: false
-    ModelId:
-      type: string
-      description: Model selection. A base model ID or a saved finetune checkpoint in {base_model}/{finetune_id}@{step} form.
-      examples:
-      - moondream3.1-9B-A2B
-      - moondream3-preview
     ChatCompletionResponse:
       type: object
       properties:
@@ -118,15 +94,39 @@ components:
                     type: string
               finish_reason:
                 type: string
+    ChatCompletionRequest:
+      type: object
+      required:
+      - model
+      - messages
+      properties:
+        model:
+          $ref: '#/components/schemas/ModelId'
+        messages:
+          type: array
+          items:
+            type: object
+            properties:
+              role:
+                type: string
+                enum:
+                - system
+                - user
+                - assistant
+              content:
+                description: Text or an array of content parts (text and image_url) for multimodal input.
+        stream:
+          type: boolean
+          default: false
   responses:
-    BadRequest:
-      description: Malformed request (missing model, image, or invalid parameters).
+    Unauthorized:
+      description: Missing or invalid API key.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid API key.
+    BadRequest:
+      description: Malformed request (missing model, image, or invalid parameters).
       content:
         application/json:
           schema:

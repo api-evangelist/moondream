@@ -153,6 +153,61 @@ paths:
           $ref: '#/components/responses/BadRequest'
 components:
   schemas:
+    ImageInput:
+      type: string
+      description: Image as a data URL (base64) or a publicly reachable image URL.
+      examples:
+      - data:image/jpeg;base64,/9j/4AAQSkZJRg...
+    BoundingBox:
+      type: object
+      description: Normalized bounding box (0..1) relative to image dimensions.
+      properties:
+        x_min:
+          type: number
+        y_min:
+          type: number
+        x_max:
+          type: number
+        y_max:
+          type: number
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+            type:
+              type: string
+    ModelId:
+      type: string
+      description: Model selection. A base model ID or a saved finetune checkpoint in {base_model}/{finetune_id}@{step} form.
+      examples:
+      - moondream3.1-9B-A2B
+      - moondream3-preview
+    Point:
+      type: object
+      description: Normalized center coordinate (0..1).
+      properties:
+        x:
+          type: number
+        y:
+          type: number
+    DetectRequest:
+      type: object
+      required:
+      - model
+      - image_url
+      - object
+      properties:
+        model:
+          $ref: '#/components/schemas/ModelId'
+        image_url:
+          $ref: '#/components/schemas/ImageInput'
+        object:
+          type: string
+          description: The object class to detect / point at / segment.
     DetectResponse:
       type: object
       properties:
@@ -162,27 +217,15 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/BoundingBox'
-    QueryRequest:
+    PointResponse:
       type: object
-      required:
-      - model
-      - image_url
-      - question
       properties:
-        model:
-          $ref: '#/components/schemas/ModelId'
-        image_url:
-          $ref: '#/components/schemas/ImageInput'
-        question:
+        request_id:
           type: string
-          description: Natural-language question about the image.
-        stream:
-          type: boolean
-          default: false
-          description: Stream the answer token-by-token as server-sent events.
-        reasoning:
-          type: boolean
-          description: Enable reasoning mode for more deliberate answers.
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/Point'
     CaptionRequest:
       type: object
       required:
@@ -204,51 +247,6 @@ components:
         stream:
           type: boolean
           default: false
-    Error:
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            message:
-              type: string
-            type:
-              type: string
-    CaptionResponse:
-      type: object
-      properties:
-        caption:
-          type: string
-        metrics:
-          $ref: '#/components/schemas/Metrics'
-        finish_reason:
-          type: string
-          examples:
-          - stop
-    BoundingBox:
-      type: object
-      description: Normalized bounding box (0..1) relative to image dimensions.
-      properties:
-        x_min:
-          type: number
-        y_min:
-          type: number
-        x_max:
-          type: number
-        y_max:
-          type: number
-    QueryResponse:
-      type: object
-      properties:
-        request_id:
-          type: string
-        answer:
-          type: string
-    ImageInput:
-      type: string
-      description: Image as a data URL (base64) or a publicly reachable image URL.
-      examples:
-      - data:image/jpeg;base64,/9j/4AAQSkZJRg...
     Metrics:
       type: object
       properties:
@@ -262,20 +260,45 @@ components:
           type: number
         ttft_ms:
           type: number
-    DetectRequest:
+    CaptionResponse:
+      type: object
+      properties:
+        caption:
+          type: string
+        metrics:
+          $ref: '#/components/schemas/Metrics'
+        finish_reason:
+          type: string
+          examples:
+          - stop
+    QueryResponse:
+      type: object
+      properties:
+        request_id:
+          type: string
+        answer:
+          type: string
+    QueryRequest:
       type: object
       required:
       - model
       - image_url
-      - object
+      - question
       properties:
         model:
           $ref: '#/components/schemas/ModelId'
         image_url:
           $ref: '#/components/schemas/ImageInput'
-        object:
+        question:
           type: string
-          description: The object class to detect / point at / segment.
+          description: Natural-language question about the image.
+        stream:
+          type: boolean
+          default: false
+          description: Stream the answer token-by-token as server-sent events.
+        reasoning:
+          type: boolean
+          description: Enable reasoning mode for more deliberate answers.
     SegmentResponse:
       type: object
       properties:
@@ -284,38 +307,15 @@ components:
           description: SVG path (normalized coordinates 0..1) describing the object mask.
         bbox:
           $ref: '#/components/schemas/BoundingBox'
-    Point:
-      type: object
-      description: Normalized center coordinate (0..1).
-      properties:
-        x:
-          type: number
-        y:
-          type: number
-    PointResponse:
-      type: object
-      properties:
-        request_id:
-          type: string
-        points:
-          type: array
-          items:
-            $ref: '#/components/schemas/Point'
-    ModelId:
-      type: string
-      description: Model selection. A base model ID or a saved finetune checkpoint in {base_model}/{finetune_id}@{step} form.
-      examples:
-      - moondream3.1-9B-A2B
-      - moondream3-preview
   responses:
-    BadRequest:
-      description: Malformed request (missing model, image, or invalid parameters).
+    Unauthorized:
+      description: Missing or invalid API key.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid API key.
+    BadRequest:
+      description: Malformed request (missing model, image, or invalid parameters).
       content:
         application/json:
           schema:
